@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.portal.mapper.ResumeCommentDao">
+    <resultMap id="BaseResultMap" type="com.portal.pojo.Resumecomment">
+        <id column="comment_id" jdbcType="INTEGER" property="comment_id"/>
+        <result column="position_id" jdbcType="INTEGER" property="position_id"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parent_id"/>
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <result column="comment_score" jdbcType="INTEGER" property="comment_score"/>
+        <result column="comment_creatime" jdbcType="TIMESTAMP" property="comment_creatime"/>
+        <result column="isdel" jdbcType="INTEGER" property="isdel"/>
+        <result column="comment_description" jdbcType="VARCHAR" property="comment_description"/>
+        <result column="commentpho_url" jdbcType="VARCHAR" property="commentpho_url"/>
+        <result column="user_comment" jdbcType="VARCHAR" property="user_comment"/>
+        <collection property="positions" ofType="com.portal.pojo.Resumeposition">
+            <result column="position_numleft" jdbcType="INTEGER" property="position_numleft"/>
+            <result column="position_location" jdbcType="VARCHAR" property="position_location"/>
+            <result column="position_company" jdbcType="VARCHAR" property="position_company"/>
+            <result column="technical_requirement" jdbcType="VARCHAR" property="technical_requirement"/>
+            <result column="position_name" jdbcType="VARCHAR" property="position_name"/>
+            <result column="work_salary" jdbcType="VARCHAR" property="work_salary"/>
+            <result column="release_time" jdbcType="TIMESTAMP" property="release_time"/>
+            <result column="position_type" jdbcType="INTEGER" property="position_type"/>
+        </collection>
+        <collection property="users" ofType="com.portal.pojo.User">
+            <id column="user_id" jdbcType="INTEGER" property="user_id"/>
+            <result column="user_name" jdbcType="VARCHAR" property="user_name"/>
+            <result column="user_sex" jdbcType="INTEGER" property="user_sex"/>
+            <result column="user_address" jdbcType="VARCHAR" property="user_address"/>
+            <result column="user_age" jdbcType="INTEGER" property="user_age"/>
+            <result column="user_creatime" jdbcType="TIMESTAMP" property="user_creatime"/>
+            <result column="user_phone" jdbcType="INTEGER" property="user_phone"/>
+            <result column="user_email" jdbcType="VARCHAR" property="user_email"/>
+            <result column="user_photo_url" jdbcType="VARCHAR" property="user_photo_url"/>
+            <result column="user_educational" jdbcType="VARCHAR" property="user_educational"/>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+      comment_id,position_id,parent_id,user_id,comment_score,comment_creatime,
+      isdel,comment_description,commentpho_url,user_comment
+    </sql>
+
+    <resultMap id="CommentList" type="com.portal.pojo.OnlyComment">
+        <id column="comment_id" jdbcType="INTEGER" property="comment_id"/>
+        <result column="position_id" jdbcType="INTEGER" property="position_id"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parent_id"/>
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <result column="comment_score" jdbcType="INTEGER" property="comment_score"/>
+        <result column="comment_creatime" jdbcType="TIMESTAMP" property="comment_creatime"/>
+        <result column="isdel" jdbcType="INTEGER" property="isdel"/>
+        <result column="comment_description" jdbcType="VARCHAR" property="comment_description"/>
+        <result column="commentpho_url" jdbcType="VARCHAR" property="commentpho_url"/>
+        <result column="user_comment" jdbcType="VARCHAR" property="user_comment"/>
+    </resultMap>
+
+    <!--ORDER BY c.comment_id DESC-->
+    <select id="queryCommentDescriptionAll" resultMap="BaseResultMap">
+        SELECT
+        c.comment_id,c.position_id,parent_id,comment_score,comment_creatime,
+      c.isdel,comment_description,commentpho_url,user_comment,p.position_type,p.work_salary,
+      p.technical_requirement,p.position_company,p.position_name,p.release_time,
+      p.position_location,p.position_numleft
+        FROM comment c
+        left join position p on c.position_id = p.position_id
+        where comment_description !=''
+    </select>
+
+    <select id="queryCommentDescriptionByPositionId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+         c.comment_id,c.position_id,parent_id,c.user_id,comment_score,comment_creatime,
+      c.isdel,comment_description,commentpho_url,user_comment,p.position_type,p.work_salary,
+      p.technical_requirement,p.position_company,p.position_name,p.release_time,p.position_location,p.position_numleft
+        from comment c
+         left join position p on c.position_id = p.position_id
+         where c.position_id = #{position_id};
+    </select>
+
+             <!--ORDER BY c.comment_id DESC-->
+    <select id="queryCommentUserAll" resultMap="BaseResultMap" >
+        SELECT c.comment_id,c.position_id,parent_id,c.user_id,comment_score,comment_creatime,
+      c.isdel,comment_description,commentpho_url,user_comment,u.user_educational,u.user_email,
+      u.user_photo_url,u.user_creatime,u.user_name
+        FROM comment c
+        left join user u on c.user_id = u.user_id
+    </select>
+
+    <select id="queryCommentUserByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+         c.comment_id,c.position_id,parent_id,c.user_id,comment_score,comment_creatime,
+      c.isdel,comment_description,commentpho_url,user_comment,u.user_educational,u.user_email,
+      u.user_photo_url,u.user_creatime,u.user_name
+        FROM comment c
+        left join user u on c.user_id = u.user_id
+        where c.user_id = #{user_id};
+    </select>
+
+    <select id="showOnlyCommentsByPositionId" parameterType="java.lang.Integer" resultMap="CommentList">
+        select
+         c.comment_id,c.position_id,parent_id,c.user_id,comment_score,comment_creatime,
+      c.isdel,comment_description,commentpho_url,user_comment
+      from comment c
+         left join position p on c.position_id = p.position_id
+         where c.position_id = #{position_id};
+    </select>
+
+    <select id="countCommentAllNum" resultType="java.lang.Integer">
+        select count(comment_id) from comment
+    </select>
+
+    <!--查询本季度数据个数-->
+    <select id="countcommentQuarter" resultType="java.lang.Integer">
+        select count(comment_id) from `comment`
+        where quarter(comment_creatime)=quarter(now());
+    </select>
+
+    <!--查询本年数据个数-->
+    <select id="countcommentYear" resultType="java.lang.Integer">
+        select count(comment_id) from `comment`
+        WHERE YEAR(comment_creatime)=YEAR(NOW())
+    </select>
+
+    <!--查询当前这周的数据个数-->
+    <select id="countcommentThisWeek" resultType="java.lang.Integer">
+        SELECT count(comment_id) FROM `comment`
+        where MONTH(comment_creatime) = MONTH(CURDATE()) and WEEK(comment_creatime) = WEEK(CURDATE())
+    </select>
+
+    <insert id="addComment" parameterType="com.portal.pojo.Resumecomment">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="comment_id != null">
+                comment_id,
+            </if>
+            <if test="position_id != null">
+                position_id,
+            </if>
+            <if test="parent_id != null">
+                parent_id,
+            </if>
+            <if test="user_id != null">
+                user_id,
+            </if>
+            <if test="comment_description != null">
+                comment_description,
+            </if>
+            <if test="comment_creatime != null">
+                comment_creatime,
+            </if>
+            <if test="commentpho_url != null">
+                commentpho_url,
+            </if>
+            <if test="user_comment != null">
+                user_comment,
+            </if>
+            <if test="comment_score != null">
+                comment_score,
+            </if>
+            <if test="isdel != null">
+                isdel,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="comment_id != null">
+                #{comment_id},
+            </if>
+            <if test="position_id != null">
+                #{position_id},
+            </if>
+            <if test="parent_id != null">
+                #{parent_id},
+            </if>
+            <if test="user_id != null">
+                #{user_id},
+            </if>
+            <if test="comment_description != null">
+                #{comment_description},
+            </if>
+            <if test="comment_creatime != null">
+                #{comment_creatime},
+            </if>
+            <if test="commentpho_url != null">
+                #{commentpho_url},
+            </if>
+            <if test="user_comment != null">
+                #{user_comment},
+            </if>
+            <if test="comment_score != null">
+                #{comment_score},
+            </if>
+            <if test="isdel != null">
+                #{isdel}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="countCommentDescriptionNotNull" resultType="java.lang.Integer">
+        select count(*) from comment where comment_description !=''
+    </select>
+
+    <select id="countUserCommentNotNull" resultType="java.lang.Integer">
+        select count(*) from comment where user_comment !=''
+    </select>
+
+</mapper>

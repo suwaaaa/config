@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.portal.mapper.MeasurementDao">
+    <resultMap id="BaseResultMap" type="com.portal.pojo.Measurement">
+        <id column="measurement_id" jdbcType="INTEGER" property="measurement_id"/>
+        <result column="outside_url" jdbcType="VARCHAR" property="outside_url"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        measurement_id,outside_url,name
+    </sql>
+
+    <insert id="addOutsideUrl" useGeneratedKeys="true" keyProperty="measurement_id"
+            parameterType="com.portal.pojo.Measurement" >
+        insert into measurement (measurement_id,outside_url,name)
+        values (#{measurement_id},#{outside_url},#{name})
+    </insert>
+
+    <delete id="deleteOutsideUrlById" parameterType="java.lang.Integer">
+        delete from measurement where measurement_id = #{measurement_id}
+    </delete>
+
+    <update id="updateOutsideUrlById" parameterType="com.portal.pojo.Measurement">
+        update measurement
+          set
+            outside_url = #{outside_url},
+            name = #{name}
+        where measurement_id = #{measurement_id}
+    </update>
+
+    <select id="queryOutsideUrlById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select * from measurement where measurement_id = #{measurement_id};
+    </select>
+
+
+</mapper>

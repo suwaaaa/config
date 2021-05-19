@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.portal.mapper.UserAdminMapper">
+
+    <!--<resultMap id="UserMap" type="com.portal.pojo.User22">-->
+        <!--<id property="id" column="user_id"></id>-->
+        <!--<result property="userName" column="user_name"></result>-->
+        <!--<result property="password" column="user_password"></result>-->
+        <!--<result property="phone" column="user_phone"></result>-->
+        <!--<result property="email" column="user_email"></result>-->
+        <!--<result property="sex" column="user_sex"></result>-->
+        <!--<result property="userSchool" column="user_school"></result>-->
+        <!--<result property="birthday" column="user_birthday"></result>-->
+        <!--<result property="userEducational" column="user_educational"></result>-->
+    <!--</resultMap>-->
+
+    <select id="getUserListLike" resultType="com.portal.pojo.User2" parameterType="com.portal.pojo.User2">
+        select * from user where 1 = 1
+        <if test='userName != null and userName != "" '>
+          and user_name like concat('%',concat(#{userName},'%'))
+        </if>
+        <if test='userPhone != null and userPhone != "" '>
+            and user_phone like concat('%',concat(#{userPhone},'%'))
+        </if>
+        <if test='userRealName != null and userRealName != "" '>
+            and user_real_name like concat('%',concat(#{userRealName},'%'))
+        </if>
+    </select>
+
+
+</mapper>

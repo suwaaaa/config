@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/static/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/static/css/public.css}" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<form  class="layui-form layuimini-form"   th:object="${user}" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">用户名</label>
+        <div class="layui-input-block">
+            <input type="hidden" th:value="*{userId}" name="userId" >
+            <input type="text" th:value="*{userName}" name="userName" lay-verify="required" lay-reqtext="用户名不能为空"  placeholder="请输入用户名"  class="layui-input">
+            <tip>填写自己管理账号的名称。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">真实姓名</label>
+        <div class="layui-input-block">
+            <input type="text" th:value="*{userRealName}" name="userRealName" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名" value="" class="layui-input">
+            <tip>填写用户真实姓名。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">账户状态</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="active" lay-skin="switch" lay-text="可用|已注销">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">性别</label>
+        <div class="layui-input-block">
+            <input type="radio" name="userSex" value="男" title="男">
+            <input type="radio" name="userSex" value="女" title="女">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">手机</label>
+        <div class="layui-input-block">
+            <input type="number" th:value="*{userPhone}" name="userPhone" lay-verify="required" lay-reqtext="手机不能为空" placeholder="请输入手机" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">邮箱</label>
+        <div class="layui-input-block">
+            <input type="email" th:value="*{userEmail}" th:name="userEmail" placeholder="编辑邮箱" lay-verify="required" lay-reqtext="邮箱不能为空" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">年龄</label>
+        <div class="layui-input-block">
+            <input type="number" th:value="*{userAge}" name="userAge" placeholder="请输入年龄" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+            <label class="layui-form-label">教育程度</label>
+            <div class="layui-input-block">
+                <input type="text" th:value="*{userEducational}" name="userEducational" placeholder="请编辑教育程度" value="" class="layui-input">
+            </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">毕业院校</label>
+        <div class="layui-input-block">
+            <input type="text" th:value="*{userSchool}" name="userSchool" placeholder="请编辑毕业院校" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">地址</label>
+        <div class="layui-input-block">
+            <input type="text" th:value="*{userAddress}" name="userAddress" placeholder="请输入地址" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">头像地址</label>
+        <div class="layui-input-block">
+            <input type="text" th:value="*{userPhotoUrl}" name="userPhotoUrl" class="layui-input" placeholder="请编辑头像地址">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+
+        </div>
+    </div>
+</form>
+<script src="../../static/lib/layui-v2.5.5/layui.js" th:src="@{/static/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            //调用修改接口
+            $.ajax({
+                type: "POST",
+                url: "/admin/updateUser2",
+                data: data.field,
+                success: function (data) {
+                    if (data>0) {
+
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(iframeIndex);
+                        layer.msg("修改成功");
+                    } else {
+                        layer.msg("修改失败")
+                    }
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

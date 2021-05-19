@@ -1,0 +1,31 @@
+@charset "utf-8";
+/* CSS Document */
+body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,dl,dt,dd,td,img,div,input{margin: 0; padding: 0;}
+body{font-size:12px;}
+img{border:none;}
+ul,li{list-style:none;}
+input,select,textarea{outline:none;border:none;background:none;}
+textarea{resize:none;}
+a{text-decoration:none;color:#000;}
+a:hover{-webkit-tap-highlight-color: transparent;}
+/*清浮动*/
+.clearfix:after{content:"";display:block;clear:both;}
+.clearfix{zoom:1;}
+.fl{float:left;}
+.fr{float:right;}
+body{
+    background-color:#F5F4F4;
+    min-width:900px;
+}
+.hide{display:none;}
+.notCopy{
+    -moz-user-select:none; /* Firefox私有属性 */
+    -webkit-user-select:none; /* WebKit内核私有属性 */
+    -ms-user-select:none; /* IE私有属性(IE10及以后) */
+    -khtml-user-select:none; /* KHTML内核私有属性 */
+    -o-user-select:none; /* Opera私有属性 */
+    user-select:none; /* CSS3属性 */
+}
+.current{
+    width:0;
+}

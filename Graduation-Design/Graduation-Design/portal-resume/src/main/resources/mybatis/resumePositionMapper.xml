@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.portal.mapper.ResumepositionDao">
+    <resultMap id="BaseResultMap" type="com.portal.pojo.Resumeposition">
+        <id column="position_id" jdbcType="INTEGER" property="position_id"/>
+        <result column="recruit_status" jdbcType="INTEGER" property="recruit_status"/>
+        <result column="position_numleft" jdbcType="INTEGER" property="position_numleft"/>
+        <result column="position_location" jdbcType="VARCHAR" property="position_location"/>
+        <result column="position_company" jdbcType="VARCHAR" property="position_company"/>
+        <result column="technical_requirement" jdbcType="VARCHAR" property="technical_requirement"/>
+        <result column="position_name" jdbcType="VARCHAR" property="position_name"/>
+        <result column="work_salary" jdbcType="VARCHAR" property="work_salary"/>
+        <result column="release_time" jdbcType="TIMESTAMP" property="release_time"/>
+        <result column="position_type" jdbcType="INTEGER" property="position_type"/>
+        <result column="isdel" jdbcType="INTEGER" property="isdel"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    position_id,recruit_status,position_numleft,position_name,position_company,technical_requirement,
+    work_salary,position_location,position_type,release_time,isdel
+    </sql>
+
+    <select id="queryPositionAll" resultMap="BaseResultMap">
+        select * from position where position.isdel = 0
+    </select>
+
+    <select id="queryPositionDelAll" resultMap="BaseResultMap">
+        select * from position where position.isdel = 1
+    </select>
+
+    <select id="queryPositionPending" resultMap="BaseResultMap">
+        select * from position where position.isdel = 0 and recruit_status = 0
+    </select>
+
+    <select id="queryPositionUrgent" resultMap="BaseResultMap">
+        select * from position where position.isdel = 0 and recruit_status = 1
+    </select>
+
+    <select id="queryPositionById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from position
+        where position_id = #{position_id} and position.isdel = 0
+    </select>
+
+    <select id="countPositionAll" resultType="java.lang.Integer">
+        select count(position_id) from position where position.isdel = 0
+    </select>
+
+    <select id="countPositionDelAll" resultType="java.lang.Integer">
+        select count(position_id) from position where position.isdel = 1
+    </select>
+
+
+    <select id="countPositionByFive" resultType="java.lang.Integer">
+        select count(position_id) from position
+        <where>
+            <!--<if test="name != null and name !=''">-->
+                <!--and name like concat('%', #{name}, '%')-->
+            <!--</if>-->
+            <if test="position_type != null">
+                and position_type = #{position_type}
+            </if>
+            <if test="work_salary != null">
+                and work_salary = #{work_salary}
+            </if>
+            <if test="technical_requirement != null">
+                and technical_requirement = #{technical_requirement}
+            </if>
+            <if test="position_company != null">
+                and position_company = #{position_company}
+            </if>
+            <if test="true">
+                and position.isdel = 0
+            </if>
+
+        </where>
+    </select>
+
+    <select id="selectPositionFive" parameterType="com.portal.pojo.Resumeposition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from position
+        <where>
+            <if test="position_name !=null">
+                position_name=#{position_name}
+            </if>
+            <if test="position_company !=null">
+                and position_company=#{position_company}
+            </if>
+            <if test="technical_requirement !=null">
+                and technical_requirement=#{technical_requirement}
+            </if>
+            <if test="work_salary !=null">
+                and work_salary=#{work_salary}
+            </if>
+            <if test="position_type !=null">
+                and position_type=#{position_type}
+            </if>
+            <if test="true">
+                and isdel = 0
+            </if>
+        </where>
+    </select>
+
+    <insert id="addPositionAll" parameterType="com.portal.pojo.Resumeposition" useGeneratedKeys="true"
+            keyProperty="position_id">
+        insert into position (recruit_status,position_numleft,position_location,position_company,technical_requirement,
+        work_salary,release_time,position_name,position_type,isdel)
+        values (#{recruit_status},#{position_numleft},
+                    #{position_location},#{position_company},#{technical_requirement},
+                    #{work_salary},#{release_time},,#{position_name},#{position_type},#{isdel})
+    </insert>
+
+    <insert id="addPositionSelective" parameterType="com.portal.pojo.Resumeposition" useGeneratedKeys="true"
+            keyProperty="position_id">
+        insert into position
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="position_id != null">
+                position_id,
+            </if>
+            <if test="recruit_status != null">
+                recruit_status,
+            </if>
+            <if test="position_numleft != null">
+                position_numleft,
+            </if>
+            <if test="position_location != null">
+                position_location,
+            </if>
+            <if test="position_company != null">
+                position_company,
+            </if>
+            <if test="technical_requirement != null">
+                technical_requirement,
+            </if>
+            <if test="work_salary != null">
+                work_salary,
+            </if>
+            <if test="release_time != null">
+                release_time,
+            </if>
+            <if test="position_name != null">
+                position_name,
+            </if>
+            <if test="position_type != null">
+                position_type,
+            </if>
+            <if test="isdel != null">
+                isdel,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="position_id != null">
+                #{position_id},
+            </if>
+            <if test="recruit_status != null">
+                #{recruit_status},
+            </if>
+            <if test="position_numleft != null">
+                #{position_numleft},
+            </if>
+            <if test="position_location != null">
+                #{position_location},
+            </if>
+            <if test="position_company != null">
+                #{position_company},
+            </if>
+            <if test="technical_requirement != null">
+                #{technical_requirement},
+            </if>
+            <if test="work_salary != null">
+                #{work_salary},
+            </if>
+            <if test="release_time != null">
+                #{release_time},
+            </if>
+            <if test="position_name != null">
+                #{position_name},
+            </if>
+            <if test="position_type != null">
+                #{position_type},
+            </if>
+            <if test="isdel != null">
+                #{isdel},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updatePositionAllById" parameterType="java.lang.Integer">
+        update position set
+            position_id = #{position_id},
+            recruit_status = #{recruit_status},
+            position_numleft = #{position_numleft},
+            position_location = #{position_location},
+            position_company = #{position_company},
+            technical_requirement = #{technical_requirement},
+            work_salary = #{work_salary},
+            release_time = #{release_time},
+            position_name = #{position_name},
+            position_type = #{position_type},
+            isdel = #{isdel}
+        where position_id = #{position_id}
+    </update>
+
+    <update id="updatePositionSelective" parameterType="com.portal.pojo.Resumeposition">
+        update position
+        <set>
+            <if test="position_id != null">
+                position_id = #{position_id},
+            </if>
+            <if test="recruit_status != null">
+                recruit_status = #{recruit_status},
+            </if>
+            <if test="position_numleft != null">
+                position_numleft = #{position_numleft},
+            </if>
+            <if test="position_location != null">
+                position_location = #{position_location},
+            </if>
+            <if test="position_company != null">
+                position_company = #{position_company},
+            </if>
+            <if test="technical_requirement != null">
+                technical_requirement = #{technical_requirement},
+            </if>
+            <if test="work_salary != null">
+                work_salary = #{work_salary},
+            </if>
+            <if test="release_time != null">
+                release_time = #{release_time},
+            </if>
+            <if test="position_name != null">
+                position_name = #{position_name},
+            </if>
+            <if test="position_type != null">
+                position_type = #{position_type},
+            </if>
+            <if test="isdel != null">
+                isdel = #{isdel},
+            </if>
+        </set>
+        where position_id = #{position_id}
+    </update>
+
+
+    <delete id="deletePosition" parameterType="java.lang.Integer">
+        delete from position where position_id = #{position_id}
+    </delete>
+
+    <delete id="deleteByIdList" parameterType="java.util.List">
+        delete from position where
+        <foreach collection="list"  item="item" separator=" or " index="index">
+            (position_id= #{position_id})
+        </foreach>
+    </delete>
+
+
+
+</mapper>

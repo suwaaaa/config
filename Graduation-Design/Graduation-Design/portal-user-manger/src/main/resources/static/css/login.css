@@ -1,0 +1,167 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors Your Name (you@example.org)
+ * @date    2019-03-23 15:09:20
+ * @version $Id$
+ */
+/*总宽度1366，实际宽度1348，总高度608*/
+/*设置背景图片*/
+body{
+	height:600px;
+    background:url("../imgs/login/loginBg01.jpg")0 0 no-repeat;
+	background-size: cover;
+	overflow: hidden;
+
+}
+/* 提示 */
+div#tip{
+	/* margin:auto; */
+	/* display:none; */
+	/* background-color:red; */
+	width:100px;
+	height:50px;
+	text-align:center;
+	line-height:50px;
+	margin-bottom:10px;
+	margin:120px auto 0;
+	/* margin-bottom:-200px; */
+	position:relative;
+	z-index:999 !important;
+	/* border-radius:10px; */
+}
+div#tip span{
+	display:none;
+	font-size:16px;
+	color:red;
+}
+/*用户输入盒子设置*/
+div.userBox{
+	width: 458px;
+	height:300px;
+    border: #fff solid 1px;
+	margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    border-radius:5px;
+    background-color:#00a8ff12;
+    z-index:2;
+}
+div.userBox ul.select{
+	width:300px;
+	/*width:30%;*/
+	height:40px;
+	/*float:auto;*/
+	/*margin:10px 179px 0 179px;*/
+	margin:auto;
+	/*background-color:red;*/
+}
+div.userBox ul.select li{
+	float:left;
+	font-size:20px;
+	color:#fff;
+	width:150px;
+	line-height:40px;
+	text-align:center;
+}
+.active{
+	border-bottom: #fff solid 2px;
+}
+/*1）输入框设置*/
+/*登录*/
+div.userBox div#loginBox input{
+	height:40px;
+	width:300px;
+	margin:25px 54px;
+	/*background-color:red;*/
+	border: #fff solid 1px;
+	border-radius:5px;
+	font-size:20px;
+	color:#fff;
+	padding:0 10px 0 40px;
+}
+div.userBox div#loginBox input#account{
+	background:url(../imgs/login/account.png) 10px center no-repeat;
+	background-size:30px 30px;
+}
+div.userBox div#loginBox input#password{
+	background:url(../imgs/login/password.png) 10px center no-repeat;
+	background-size:30px 30px;
+}
+div.userBox div#loginBox input#loginBn{
+	/*border-color:red;*/
+	border-color:transparent;	
+	background-color:#1f8dd6;
+	width:158px;
+	height:40px;
+	margin:20px 150px 0 150px;
+	/*margin: auto;*/
+	color:#fff;
+	line-height:30px;
+	text-align: center;
+	border-radius:5px;
+	font-size:25px;
+	padding:0 54px;
+	maxlength:16px;
+}
+/*注册*/
+div.userBox div#registerBox input{
+	height:40px;
+	width:300px;
+	margin:10px 54px;
+	/*background-color:red;*/
+	border: #fff solid 1px;
+	border-radius:5px;
+	font-size:20px;
+	color:#fff;
+	padding:0 10px 0 40px;
+}
+div.userBox div#registerBox input#rgAccount{
+	background:url(../imgs/login/account.png) 10px center no-repeat;
+	background-size:30px 30px;
+}
+div.userBox div#registerBox input#rgPassword1{
+	background:url(../imgs/login/password.png) 10px center no-repeat;
+	background-size:30px 30px;
+}
+div.userBox div#registerBox input#rgPassword2{
+	background:url(../imgs/login/password02.png) 10px center no-repeat;
+	background-size:30px 30px;
+}
+div.userBox div#registerBox input#registerBn{
+	/*border-color:red;*/
+	border-color:transparent;	
+	background-color:red;
+	width:158px;
+	height:40px;
+	margin:20px 150px 0 150px;
+	/*margin: auto;*/
+	color:#fff;
+	line-height:30px;
+	text-align: center;
+	border-radius:5px;
+	font-size:25px;
+	padding:0 54px;
+}
+
+/*placeholder样式设置及兼容*/
+/*WebKit browsers*/
+input::-webkit-input-placeholder{
+	color:#fff;
+	font-size:18px;
+}
+/*Mozilla Firefox 4 to 8*/
+input:-moz-input-placeholder{
+	color:#fff;
+	font-size:18px;
+}
+/*Mozilla Firefox 19+*/
+input::-moz-input-placeholder{
+	color:#fff;
+	font-size:18px;
+}
+/*Internet Explore 10+*/
+input::-ms-input-placeholder{
+	color:#fff;
+	font-size:18px;
+}

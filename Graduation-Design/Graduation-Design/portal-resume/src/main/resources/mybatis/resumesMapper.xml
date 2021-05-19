@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.portal.mapper.ResumesDao">
+    <resultMap id="BaseResultMap" type="com.portal.pojo.Resumes">
+        <id column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="resumepho_url" jdbcType="VARCHAR" property="resumepho_url"/>
+        <result column="jobsearch" jdbcType="VARCHAR" property="jobsearch"/>
+        <result column="isdel" jdbcType="INTEGER" property="isdel"/>
+        <result column="self_evaluation" jdbcType="VARCHAR" property="self_evaluation"/>
+        <result column="additional_info" jdbcType="VARCHAR" property="additional_info"/>
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <result column="resume_creatime" jdbcType="TIMESTAMP" property="resume_creatime"/>
+        <!--配置集合的映射-->
+        <collection property="users" ofType="com.portal.pojo.User">
+            <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+            <result column="user_real_name" jdbcType="VARCHAR" property="user_real_name"/>
+            <result column="user_sex" jdbcType="INTEGER" property="user_sex"/>
+            <result column="user_address" jdbcType="VARCHAR" property="user_address"/>
+            <result column="user_age" jdbcType="INTEGER" property="user_age"/>
+            <result column="user_phone" jdbcType="INTEGER" property="user_phone"/>
+            <result column="user_email" jdbcType="VARCHAR" property="user_email"/>
+            <result column="user_educational" jdbcType="VARCHAR" property="user_educational"/>
+        </collection>
+        <collection property="skills" ofType="com.portal.pojo.Skill">
+            <result column="skill_id" jdbcType="INTEGER" property="skill_id"/>
+            <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+            <result column="skill_name" jdbcType="VARCHAR" property="skill_name"/>
+            <result column="skill_type" jdbcType="VARCHAR" property="skill_type"/>
+        </collection>
+        <collection property="performances" ofType="com.portal.pojo.Performance">
+            <result column="performance_id" jdbcType="INTEGER" property="performance_id"/>
+            <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+            <result column="performance_name" jdbcType="VARCHAR" property="performance_name"/>
+            <result column="performance_describtion" jdbcType="VARCHAR" property="performance_describtion"/>
+            <result column="start_date" jdbcType="TIMESTAMP" property="start_date"/>
+            <result column="end_date" jdbcType="TIMESTAMP" property="end_date"/>
+        </collection>
+        <collection property="experiences" ofType="com.portal.pojo.Experience">
+            <result column="program_id" jdbcType="INTEGER" property="program_id"/>
+            <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+            <result column="program_name" jdbcType="VARCHAR" property="program_name"/>
+            <result column="program_describtion" jdbcType="VARCHAR" property="program_describtion"/>
+            <result column="startdate" jdbcType="TIMESTAMP" property="startdate"/>
+            <result column="enddate" jdbcType="TIMESTAMP" property="enddate"/>
+        </collection>
+        <collection property="awards" ofType="com.portal.pojo.Award">
+            <result column="award_id" jdbcType="INTEGER" property="award_id"/>
+            <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+            <result column="award_name" jdbcType="VARCHAR" property="award_name"/>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+    resume_id,user_id,state,resumepho_url,jobsearch,isdel,self_evaluation,additional_info,
+    user_real_name,user_sex,user_address,user_age,user_phone,user_email,user_educational,
+    skill_name,skill_type,resume_creatime,
+    performance_name,performance_describtion,start_date,end_date,
+    program_name,program_describtion,startdate,enddate,
+    award_name
+    </sql>
+
+    <select id="queryResumesAll" resultMap="BaseResultMap">
+        SELECT
+            r.resume_id,r.state,r.resumepho_url,r.jobsearch,r.self_evaluation,
+            r.additional_info,r.isdel,r.resumepho_url,r.user_id,r.resume_creatime,
+            u.user_real_name,
+            u.user_age,
+            u.user_address,
+            u.user_phone,
+            u.user_email,
+            u.user_educational,
+            u.user_sex,
+            s.skill_name,s.skill_type,s.skill_id,
+            p.performance_name,p.performance_describtion,
+            p.start_date,p.end_date,p.performance_id,
+            e.program_name,e.program_describtion,e.startdate,e.enddate,e.program_id,
+            a.award_id,a.award_name
+        from resume r
+        left join skill s on s.resume_id = r.resume_id
+        left join school_performance p on p.resume_id = r.resume_id
+        left join program_experience e on e.resume_id = r.resume_id
+        left join award a on a.resume_id = r.resume_id
+        left join user u on u.user_id = r.user_id
+        where r.isdel = 0
+    </select>
+
+    <select id="queryResumesDelAll" resultMap="BaseResultMap">
+        SELECT
+               r.resume_id,r.state,r.resumepho_url,r.jobsearch,r.self_evaluation,
+               r.additional_info,r.isdel,r.resumepho_url,r.user_id,r.resume_creatime,
+               u.user_real_name,
+               u.user_age,
+               u.user_address,
+               u.user_phone,
+               u.user_email,
+               u.user_educational,
+               u.user_sex,
+               s.skill_name,s.skill_type,s.skill_id,
+               p.performance_name,p.performance_describtion,
+               p.start_date,p.end_date,p.performance_id,
+               e.program_name,e.program_describtion,e.startdate,e.enddate,e.program_id,
+               a.award_id,a.award_name
+        from resume r
+                 left join skill s on s.resume_id = r.resume_id
+                 left join school_performance p on p.resume_id = r.resume_id
+                 left join program_experience e on e.resume_id = r.resume_id
+                 left join award a on a.resume_id = r.resume_id
+                 left join user u on u.user_id = r.user_id
+        WHERE r.isdel = 1
+    </select>
+    <!--GROUP_CONCAT(course, ":", score) AS 成绩-->
+
+
+    <select id="countResumesNumAll" resultType="java.lang.Integer">
+        SELECT
+               count(r.resume_id)
+        FROM
+             resume r
+    </select>
+
+    <select id="countResumesNumDel" resultType="java.lang.Integer">
+        SELECT
+                count(r.resume_id)
+                FROM
+                resume r where r.isdel = 0
+    </select>
+
+    <resultMap type="com.portal.pojo.Resumes" id="ResumeSkills">
+        <id column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+        <!-- 一对多级联查询，ofType表示集合中的元素类型，将resume_id传递给selectOrdersByld -->
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <collection property="skills" ofType="com.portal.pojo.Skill" column="resume_id">
+            <result column="skill_id" jdbcType="INTEGER" property="skill_id"/>
+            <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+            <result column="skill_name" jdbcType="VARCHAR" property="skill_name"/>
+            <result column="skill_type" jdbcType="VARCHAR" property="skill_type"/>
+        </collection>
+    </resultMap>
+    <select id="queryResumesSkillsByUserId" parameterType="java.lang.Integer" resultMap="ResumeSkills">
+        select
+               u.user_id,s.resume_id,s.skill_id,s.skill_type,s.skill_name
+        from resume r,skill s,user u
+        WHERE r.resume_id = s.resume_id and u.user_id = r.user_id and u.user_id = #{user_id}
+    </select>
+
+    <resultMap type="com.portal.pojo.Resumes" id="ResumePerformances">
+        <id column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <!-- 一对多级联查询，ofType表示集合中的元素类型，将resume_id传递给selectOrdersByld -->
+        <collection property="performances" ofType="com.portal.pojo.Performance" column="resume_id">
+            <result column="performance_id" jdbcType="INTEGER" property="performance_id"/>
+            <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+            <result column="performance_name" jdbcType="VARCHAR" property="performance_name"/>
+            <result column="performance_describtion" jdbcType="VARCHAR" property="performance_describtion"/>
+            <result column="start_date" jdbcType="TIMESTAMP" property="start_date"/>
+            <result column="end_date" jdbcType="TIMESTAMP" property="end_date"/>
+        </collection>
+    </resultMap>
+    <select id="queryResumesPerformancesByUserId" parameterType="java.lang.Integer" resultMap="ResumePerformances">
+        select
+               u.user_id,p.performance_id,p.performance_name,p.performance_describtion,p.start_date,p.end_date
+        from resume r,school_performance p,user u
+        WHERE r.resume_id = p.resume_id and u.user_id = r.user_id and u.user_id = #{user_id}
+    </select>
+
+    <resultMap type="com.portal.pojo.Resumes" id="ResumeExperiences">
+        <id column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <!-- 一对多级联查询，ofType表示集合中的元素类型，将resume_id传递给selectOrdersByld -->
+        <collection property="experiences" ofType="com.portal.pojo.Experience" column="resume_id">
+            <result column="program_id" jdbcType="INTEGER" property="program_id"/>
+            <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+            <result column="program_name" jdbcType="VARCHAR" property="program_name"/>
+            <result column="program_describtion" jdbcType="VARCHAR" property="program_describtion"/>
+            <result column="startdate" jdbcType="TIMESTAMP" property="startdate"/>
+            <result column="enddate" jdbcType="TIMESTAMP" property="enddate"/>
+        </collection>
+    </resultMap>
+    <select id="queryResumesExperiencesByUserId" parameterType="java.lang.Integer" resultMap="ResumeExperiences">
+        select
+               r.resume_id,u.user_id,e.program_id,e.program_name,e.program_describtion,e.startdate,e.enddate
+        from resume r,program_experience e,user u
+        WHERE r.resume_id = e.resume_id and u.user_id = r.user_id and u.user_id = #{user_id} and r.isdel = 0
+    </select>
+
+    <resultMap type="com.portal.pojo.Resumes" id="ResumeAwards">
+        <id column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <!-- 一对多级联查询，ofType表示集合中的元素类型，将resume_id传递给selectOrdersByld -->
+        <collection property="awards" ofType="com.portal.pojo.Award" column="resume_id">
+            <result column="award_id" jdbcType="INTEGER" property="award_id"/>
+            <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+            <result column="award_name" jdbcType="VARCHAR" property="award_name"/>
+        </collection>
+    </resultMap>
+    <select id="queryResumesAwardsByUserId" parameterType="java.lang.Integer" resultMap="ResumeAwards">
+        select
+               u.user_id,a.award_id,a.award_name
+        from resume r,award a,user u
+        WHERE r.resume_id = a.resume_id and u.user_id = r.user_id and u.user_id = #{user_id}
+    </select>
+
+    <update id="uploadResumesImg" parameterType="com.portal.pojo.Resumes">
+        update resume set resumepho_url = #{resumepho_url}
+        where resume_id = #{resume_id}
+    </update>
+
+    <resultMap id="UserResumes" type="com.portal.pojo.UserResumes">
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <result column="user_real_name" jdbcType="VARCHAR" property="user_real_name"/>
+        <result column="user_sex" jdbcType="INTEGER" property="user_sex"/>
+        <result column="user_address" jdbcType="VARCHAR" property="user_address"/>
+        <result column="user_age" jdbcType="INTEGER" property="user_age"/>
+        <result column="user_phone" jdbcType="INTEGER" property="user_phone"/>
+        <result column="user_email" jdbcType="VARCHAR" property="user_email"/>
+        <result column="user_educational" jdbcType="VARCHAR" property="user_educational"/>
+        <!--配置集合的映射-->
+        <collection property="resumes" ofType="com.portal.pojo.Resumes" column="user_id">
+            <id column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+            <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+            <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+            <result column="state" jdbcType="INTEGER" property="state"/>
+            <result column="resumepho_url" jdbcType="VARCHAR" property="resumepho_url"/>
+            <result column="jobsearch" jdbcType="VARCHAR" property="jobsearch"/>
+            <result column="isdel" jdbcType="INTEGER" property="isdel"/>
+            <result column="self_evaluation" jdbcType="VARCHAR" property="self_evaluation"/>
+            <result column="additional_info" jdbcType="VARCHAR" property="additional_info"/>
+            <result column="resume_creatime" jdbcType="TIMESTAMP" property="resume_creatime"/>
+            <collection property="skills" ofType="com.portal.pojo.Skill">
+                <result column="skill_id" jdbcType="INTEGER" property="skill_id"/>
+                <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+                <result column="skill_name" jdbcType="VARCHAR" property="skill_name"/>
+                <result column="skill_type" jdbcType="VARCHAR" property="skill_type"/>
+            </collection>
+            <collection property="performances" ofType="com.portal.pojo.Performance">
+                <result column="performance_id" jdbcType="INTEGER" property="performance_id"/>
+                <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+                <result column="performance_name" jdbcType="VARCHAR" property="performance_name"/>
+                <result column="performance_describtion" jdbcType="VARCHAR" property="performance_describtion"/>
+                <result column="start_date" jdbcType="TIMESTAMP" property="start_date"/>
+                <result column="end_date" jdbcType="TIMESTAMP" property="end_date"/>
+            </collection>
+            <collection property="experiences" ofType="com.portal.pojo.Experience">
+                <result column="program_id" jdbcType="INTEGER" property="program_id"/>
+                <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+                <result column="program_name" jdbcType="VARCHAR" property="program_name"/>
+                <result column="program_describtion" jdbcType="VARCHAR" property="program_describtion"/>
+                <result column="startdate" jdbcType="TIMESTAMP" property="startdate"/>
+                <result column="enddate" jdbcType="TIMESTAMP" property="enddate"/>
+            </collection>
+            <collection property="awards" ofType="com.portal.pojo.Award">
+                <result column="award_id" jdbcType="INTEGER" property="award_id"/>
+                <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+                <result column="award_name" jdbcType="VARCHAR" property="award_name"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="queryUserAllResumesByUserId" parameterType="java.lang.Integer" resultMap="UserResumes">
+        select
+               u.user_id,
+               u.user_real_name,
+               u.user_educational,
+               u.user_age,
+               u.user_address,
+               u.user_phone,
+               u.user_email,
+               u.user_sex,
+               r.resume_id,
+               r.state,
+               r.resumepho_url,
+               r.jobsearch,
+               r.self_evaluation,
+               r.additional_info,
+               r.isdel,
+               r.resumepho_url,
+               r.resume_creatime,
+               s.skill_name,
+               s.skill_type,
+               s.skill_id,
+               p.performance_name,
+               p.performance_describtion,
+               p.start_date,
+               p.end_date,
+               p.performance_id,
+               e.program_name,
+               e.program_describtion,
+               e.startdate ,
+               e.enddate,
+               e.program_id,
+               a.award_id,
+               a.award_name
+        from resume r
+                left join skill s on s.resume_id = r.resume_id
+                left join school_performance p on p.resume_id = r.resume_id
+                left join program_experience e on e.resume_id = r.resume_id
+                left join award a on a.resume_id = r.resume_id
+                left join user u on u.user_id = r.user_id
+        WHERE
+                r.isdel = 0
+        and u.user_id = #{user_id}
+    </select>
+
+
+
+
+    <select id="getDelResumesByUserId" parameterType="java.lang.Integer" resultMap="UserResumes">
+        select
+               u.user_id,
+               u.user_real_name,
+               u.user_educational,
+               u.user_age,
+               u.user_address,
+               u.user_phone,
+               u.user_email,
+               u.user_sex,
+               r.resume_id,
+               r.state,
+               r.resumepho_url,
+               r.jobsearch,
+               r.self_evaluation,
+               r.additional_info,
+               r.isdel,
+               r.resumepho_url,
+               r.resume_creatime,
+               s.skill_name,
+               s.skill_type,
+               s.skill_id,
+               p.performance_name,
+               p.performance_describtion,
+               p.start_date,
+               p.end_date,
+               p.performance_id,
+               e.program_name,
+               e.program_describtion,
+               e.startdate ,
+               e.enddate,
+               e.program_id,
+               a.award_id,
+               a.award_name
+        from resume r
+                left join user u on u.user_id = r.user_id
+                left join skill s on s.resume_id = r.resume_id
+                left join school_performance p on p.resume_id = r.resume_id
+                left join program_experience e on e.resume_id = r.resume_id
+                left join award a on a.resume_id = r.resume_id
+        WHERE
+                r.isdel = 1
+        and r.user_id = #{user_id}
+    </select>
+
+    <insert id="insertResumesBasic" parameterType="com.portal.pojo.Resumes"
+            useGeneratedKeys="true" keyProperty="resume_id">
+        insert into
+        resume
+                (state,jobsearch,isdel,self_evaluation,additional_info,user_id)
+        values
+               (#{state},#{jobsearch},#{isdel},#{self_evaluation},#{additional_info},#{user_id})
+    </insert>
+    <insert id="addResumesSkills" parameterType="com.portal.pojo.Skill">
+        INSERT INTO skill
+        (skill_id,skill_name,skill_type,resume_id)
+        values
+            (#{skill_id},#{skill_name},#{skill_type},#{resume_id})
+    </insert>
+
+    <insert id="addResumesPerformance" parameterType="com.portal.pojo.Performance">
+        INSERT INTO school_performance
+                (performance_name,
+                 performance_describtion,
+                 start_date,
+                 end_date,
+                 performance_id,
+                 resume_id)
+        values
+               (#{performance_name},#{performance_describtion},
+                #{start_date},#{end_date},#{performance_id},#{resume_id})
+    </insert>
+    <resultMap id="Experience" type="com.portal.pojo.Experience">
+        <id column="program_id" jdbcType="INTEGER" property="program_id"/>
+        <result column="resume_id" jdbcType="INTEGER" property="resume_id"/>
+        <result column="startdate" jdbcType="TIMESTAMP" property="startdate"/>
+        <result column="enddate" jdbcType="TIMESTAMP" property="enddate"/>
+        <result column="program_name" jdbcType="VARCHAR" property="program_name"/>
+        <result column="program_describtion" jdbcType="VARCHAR" property="program_describtion"/>
+    </resultMap>
+    <insert id="addResumesExperience" parameterType="com.portal.pojo.Experience" useGeneratedKeys="true"
+            keyProperty="program_id">
+        INSERT INTO
+        program_experience
+                (program_id,
+                 resume_id,
+                 program_name,
+                 program_describtion,
+                 startdate,
+                 enddate)
+        values
+               (#{program_id},#{resume_id},#{program_name},
+                #{program_describtion},#{startdate},#{enddate})
+    </insert>
+
+    <insert id="addResumesAward" parameterType="com.portal.pojo.Award" useGeneratedKeys="true"
+            keyProperty="award_id">
+        INSERT INTO
+        award
+                (award_id,
+                 award_name,
+                 resume_id)
+        values
+               (#{award_id},#{award_name},#{resume_id})
+    </insert>
+
+    <select id="getResumesIdByUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select r.resume_id
+        from resume r
+                 left join user u
+                     on r.user_id = u.user_id
+        where u.user_id = #{user_id} and r.isdel = 0
+    </select>
+
+    <update id="updateResumesBasisSelective" parameterType="com.portal.pojo.Resumes">
+        update resume
+        <set>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="jobsearch != null">
+                jobsearch = #{jobsearch},
+            </if>
+            <if test="isdel != null">
+                isdel = #{isdel},
+            </if>
+            <if test="self_evaluation != null">
+                self_evaluation = #{self_evaluation},
+            </if>
+            <if test="additional_info != null">
+                additional_info = #{additional_info},
+            </if>
+        </set>
+        where resume_id = #{resume_id}
+    </update>
+
+    <update id="updateResumesBasis" parameterType="com.portal.pojo.Resumes"
+            useGeneratedKeys="true" keyProperty="resume_id">
+        update resume
+        set
+            user_id = #{user_id},
+            state = #{state},
+            jobsearch = #{jobsearch},
+            isdel = #{isdel},
+            self_evaluation = #{self_evaluation},
+            additional_info = #{additional_info}
+        where resume.user_id = #{user_id} and isdel = 0
+    </update>
+
+    <update id="updateResumesSkills" parameterType="java.util.List"
+            useGeneratedKeys="true" keyProperty="skill_id">
+        <foreach collection="skills" item="s" index="index" open="" close="" separator=";">
+            UPDATE skill
+            <set>
+                <if test="s.skill_name != null">
+                    skill_name=#{s.skill_name},
+                </if>
+                <if test="s.skill_type != null">
+                    skill_type=#{s.skill_type},
+                </if>
+                <if test="s.resume_id != null">
+                    resume_id=#{s.resume_id},
+                </if>
+            </set>
+            <where>
+                skill_id=#{s.skill_id}
+            </where>
+        </foreach>
+    </update>
+
+    <!--<update id="updateResumesSkillsSelective" parameterType="java.util.List"-->
+            <!--useGeneratedKeys="true" keyProperty="award_id">-->
+        <!--update award-->
+        <!--<set>-->
+            <!--<if test="user_real_name != null">-->
+                <!--user_id = #{user_id},-->
+            <!--</if>-->
+            <!--<if test="user_sex != null">-->
+                <!--state = #{state},-->
+            <!--</if>-->
+            <!--<if test="user_address != null">-->
+                <!--jobsearch = #{jobsearch},-->
+            <!--</if>-->
+            <!--<if test="user_age != null">-->
+                <!--isdel = #{isdel},-->
+            <!--</if>-->
+            <!--<if test="user_creatime != null">-->
+                <!--self_evaluation = #{self_evaluation},-->
+            <!--</if>-->
+            <!--<if test="user_phone != null">-->
+                <!--additional_info = #{additional_info}-->
+            <!--</if>-->
+        <!--</set>-->
+        <!--where resume.user_id = #{user_id} and isdel = 0-->
+    <!--</update>-->
+
+    <update id="updateResumesAwards" parameterType="java.util.List"
+            useGeneratedKeys="true" keyProperty="award_id">
+        <foreach collection="awards" item="a" index="index" open="" close="" separator=";">
+            UPDATE award
+            <set>
+                <if test="a.award_name != null">
+                    award_name=#{a.award_name},
+                </if>
+                <if test="a.resume_id != null">
+                    resume_id=#{a.resume_id},
+                </if>
+            </set>
+            <where>
+                award_id=#{a.award_id}
+            </where>
+        </foreach>
+    </update>
+
+    <update id="updateResumesExperiences" parameterType="java.util.List"
+            useGeneratedKeys="true" keyProperty="program_id">
+        <foreach collection="experiences" item="e" index="index" open="" close="" separator=";">
+            UPDATE program_experience
+            <set>
+                <if test="e.program_name != null">
+                    e.program_name=#{e.program_name},
+                </if>
+                <if test="e.program_describtion != null">
+                    program_describtion=#{e.program_describtion},
+                </if>
+                <if test="e.startdate != null">
+                    startdate=#{e.startdate},
+                </if>
+                <if test="e.enddate != null">
+                    enddate=#{e.enddate},
+                </if>
+                <if test="e.resume_id != null">
+                    resume_id=#{e.resume_id},
+                </if>
+            </set>
+            <where>
+                program_id=#{e.program_id}
+            </where>
+        </foreach>
+    </update>
+
+    <update id="updateResumesPerformances" parameterType="java.util.List"
+            useGeneratedKeys="true" keyProperty="performance_id">
+        <foreach collection="performances" item="p" index="index" open="" close="" separator=";">
+            UPDATE school_performance
+            <set>
+                <if test="p.performance_name != null">
+                    p.performance_name=#{p.performance_name},
+                </if>
+                <if test="p.performance_describtion != null">
+                    performance_describtion=#{p.performance_describtion},
+                </if>
+                <if test="p.start_date != null">
+                    start_date=#{p.start_date},
+                </if>
+                <if test="p.end_date != null">
+                    end_date=#{p.end_date},
+                </if>
+                <if test="p.resume_id != null">
+                    resume_id=#{p.resume_id},
+                </if>
+            </set>
+            <where>
+                performance_id=#{p.performance_id}
+            </where>
+        </foreach>
+    </update>
+
+    <delete id="deleteResumesByResumeId" parameterType="java.lang.Integer">
+        delete from resume where resume_id = #{resume_id}
+    </delete>
+
+    <delete id="deleteResumesSkillOneBySkillId" parameterType="java.lang.Integer">
+        delete from skill where skill_id = #{skill_id}
+    </delete>
+
+    <delete id="deleteResumesSkillsAllByResumeId" parameterType="java.lang.Integer">
+        delete from skill where resume_id = #{resume_id}
+    </delete>
+
+    <delete id="deleteResumesAwardOneByAwardId" parameterType="java.lang.Integer">
+        delete from award where award_id = #{award_id}
+    </delete>
+
+    <delete id="deleteResumesAwardsAllByResumeId" parameterType="java.lang.Integer">
+        delete from award where resume_id = #{resume_id}
+    </delete>
+
+    <delete id="deleteResumesPerformanceOneByPerformanceId" parameterType="java.lang.Integer">
+        delete from school_performance where performance_id = #{performance_id}
+    </delete>
+
+    <delete id="deleteResumesPerformancesAllByResumeId" parameterType="java.lang.Integer">
+        delete from school_performance where resume_id = #{resume_id}
+    </delete>
+
+    <delete id="deleteResumesExperienceOneByExperienceId" parameterType="java.lang.Integer">
+        delete from program_experience where program_id = #{program_id}
+    </delete>
+
+    <delete id="deleteResumesExperiencesAllByResumeId" parameterType="java.lang.Integer">
+        delete from program_experience where resume_id = #{resume_id}
+    </delete>
+
+
+    <update id="falseDeleteResumesByResumesId" parameterType="java.lang.Integer">
+        update resume set isdel = 1 where resume_id = #{resume_id}
+    </update>
+
+    <update id="reuseResumesByResumesId" parameterType="java.lang.Integer">
+        update resume set isdel = 0 where resume_id = #{resume_id}
+    </update>
+
+    <select id="countUserResumesNumber" parameterType="java.lang.Integer">
+        select count(distinct resume_id) from resume where user_id = #{user_id}
+    </select>
+
+
+    <update id="updateResumesExperiencesOne" parameterType="com.portal.pojo.Experience"
+            useGeneratedKeys="true" keyProperty="program_id">
+            UPDATE program_experience
+            <set>
+                <if test="program_name != null">
+                    program_name=#{program_name},
+                </if>
+                <if test="program_describtion != null">
+                    program_describtion=#{program_describtion},
+                </if>
+                <if test="startdate != null">
+                    startdate=#{startdate},
+                </if>
+                <if test="enddate != null">
+                    enddate=#{enddate},
+                </if>
+                <if test="resume_id != null">
+                    resume_id=#{resume_id},
+                </if>
+            </set>
+               where program_id = #{program_id}
+    </update>
+    <update id="updateResumesSkillsOne" parameterType="com.portal.pojo.Skill"
+            useGeneratedKeys="true" keyProperty="skill_id">
+            UPDATE skill
+            <set>
+                <if test="skill_name != null">
+                    skill_name=#{skill_name},
+                </if>
+                <if test="skill_type != null">
+                    skill_type=#{skill_type},
+                </if>
+                <if test="resume_id != null">
+                    resume_id=#{resume_id},
+                </if>
+            </set>
+              where skill_id=#{skill_id}
+    </update>
+    <update id="updateResumesPerformancesOne" parameterType="com.portal.pojo.Performance"
+            useGeneratedKeys="true" keyProperty="performance_id">
+            UPDATE school_performance
+            <set>
+                <if test="performance_name != null">
+                    performance_name=#{performance_name},
+                </if>
+                <if test="performance_describtion != null">
+                    performance_describtion=#{performance_describtion},
+                </if>
+                <if test="start_date != null">
+                    start_date=#{start_date},
+                </if>
+                <if test="end_date != null">
+                    end_date=#{end_date},
+                </if>
+                <if test="resume_id != null">
+                    resume_id=#{resume_id},
+                </if>
+            </set>
+               where performance_id=#{performance_id}
+    </update>
+    <update id="updateResumesAwardsOne" parameterType="com.portal.pojo.Award"
+            useGeneratedKeys="true" keyProperty="award_id">
+            UPDATE award
+            <set>
+                <if test="award_name != null">
+                    award_name=#{award_name},
+                </if>
+                <if test="resume_id != null">
+                    resume_id=#{resume_id},
+                </if>
+            </set>
+              WHERE  award_id=#{award_id}
+    </update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--<resultMap id="UserResumesSkills" type="com.portal.pojo.UserResumeAll.UserResumeSkills">-->
+        <!--<id column="resume_id" jdbcType="INTEGER" property="resume_id"/>-->
+        <!--<result column="user_real_name" jdbcType="VARCHAR" property="user_real_name"/>-->
+        <!--<collection property="skills" ofType="com.portal.pojo.Skill" column="resume_id">-->
+            <!--<result column="skill_id" jdbcType="INTEGER" property="skill_id"/>-->
+            <!--<result column="resume_id" jdbcType="INTEGER" property="resume_id"/>-->
+            <!--<result column="skill_name" jdbcType="VARCHAR" property="skill_name"/>-->
+            <!--<result column="skill_type" jdbcType="VARCHAR" property="skill_type"/>-->
+        <!--</collection>-->
+    <!--</resultMap>-->
+    <!--<select id="queryResumesSkillsLike" parameterType="com.portal.pojo.UserResumeAll.UserResumeSkills"-->
+            <!--resultMap="UserResumesSkills">-->
+        <!--select-->
+        <!--s.resume_id,s.skill_id,s.skill_type,s.skill_name-->
+        <!--from resume r-->
+        <!--left join skill s on r.resume_id = s.resume_id-->
+        <!--left join user u on  u.user_id = r.user_id-->
+        <!--<where>-->
+            <!--<if test="true">-->
+                <!--u.user_id = #{user_id}-->
+            <!--</if>-->
+            <!--<if test="skill_name !=null and skill_name != ''">-->
+                <!--AND-->
+                <!--<foreach collection="skills" item="item" open="(" close=")" separator="or">-->
+                    <!--s.skill_name LIKE CONCAT(CONCAT('%', #{item}), '%')-->
+                <!--</foreach>-->
+            <!--</if>-->
+            <!--<if test="skill_type !=null">-->
+                <!--AND-->
+                <!--<foreach collection="skills" item="item" open="(" close=")" separator="or">-->
+                    <!--s.skill_type LIKE CONCAT(CONCAT('%', #{item}), '%')-->
+                <!--</foreach>-->
+            <!--</if>-->
+        <!--</where>-->
+    <!--</select>-->
+
+
+
+
+    <!--<select id="queryResumesLittle" parameterType="com.portal.pojo.Resumes" resultMap="BaseResultMap">-->
+        <!--SELECT-->
+        <!--r.resume_id,r.state,r.resumepho_url,r.jobsearch,r.self_evaluation,-->
+        <!--r.additional_info,r.isdel,r.resumepho_url,r.user_id,-->
+        <!--u.user_real_name,-->
+        <!--u.user_age,-->
+        <!--u.user_address,-->
+        <!--u.user_phone,-->
+        <!--u.user_email,-->
+        <!--u.user_educational,-->
+        <!--u.user_sex,-->
+        <!--s.skill_name,s.skill_type,s.skill_id,-->
+        <!--p.performance_name,p.performance_describtion,-->
+        <!--p.start_date,p.end_date,p.performance_id,-->
+        <!--e.program_name,e.program_describtion,e.startdate,e.enddate,e.program_id,-->
+        <!--a.award_id,a.award_name-->
+        <!--from resume r-->
+        <!--left join skill s on s.resume_id = r.resume_id-->
+        <!--left join school_performance p on p.resume_id = r.resume_id-->
+        <!--left join program_experience e on e.resume_id = r.resume_id-->
+        <!--left join award a on a.resume_id = r.resume_id-->
+        <!--left join user u on u.user_id = r.user_id-->
+        <!--<where>-->
+            <!--<if test="true">-->
+                <!--r.isdel = 0-->
+            <!--</if>-->
+            <!--<if test="resume_id !=null">-->
+                <!--r.resume_id=#{resume_id}-->
+            <!--</if>-->
+            <!--<if test="state !=null">-->
+                <!--and r.state=#{state}-->
+            <!--</if>-->
+            <!--<if test="resumepho_url !=null">-->
+                <!--and r.resumepho_url like concat('%', #{resumepho_url}, '%')-->
+            <!--</if>-->
+            <!--<if test="jobsearch !=null">-->
+                <!--and r.jobsearch like concat('%', #{jobsearch}, '%')-->
+            <!--</if>-->
+            <!--<if test="self_evaluation !=null">-->
+                <!--and self_evaluation like concat('%', #{self_evaluation}, '%')-->
+            <!--</if>-->
+            <!--<if test="additional_info !=null">-->
+                <!--and additional_info like concat('%', #{additional_info}, '%')-->
+            <!--</if>-->
+            <!--<if test="user_real_name !=null">-->
+                <!--and user_real_name like concat('%', #{user_real_name}, '%')-->
+            <!--</if>-->
+            <!--<if test="user_age !=null">-->
+                <!--and user_age=#{user_age}-->
+            <!--</if>-->
+            <!--<if test="user_address !=null">-->
+                <!--and user_address like concat('%', #{user_address}, '%')-->
+            <!--</if>-->
+            <!--<if test="user_phone !=null">-->
+                <!--and user_phone=#{user_phone}-->
+            <!--</if>-->
+            <!--<if test="user_email !=null">-->
+                <!--and user_email like concat('%', #{user_email}, '%')-->
+            <!--</if>-->
+            <!--<if test="user_educational !=null">-->
+                <!--and user_educational=#{user_educational}-->
+            <!--</if>-->
+            <!--<if test="user_sex !=null">-->
+                <!--and user_sex=#{user_sex}-->
+            <!--</if>-->
+            <!--<if test="skill_name !=null">-->
+                <!--and skill_name=#{skill_name}-->
+            <!--</if>-->
+            <!--<if test="skill_type !=null">-->
+                <!--and skill_type=#{skill_type}-->
+            <!--</if>-->
+            <!--<if test="performance_name !=null">-->
+                <!--and performance_name=#{performance_name}-->
+            <!--</if>-->
+            <!--<if test="performance_describtion !=null">-->
+                <!--and performance_describtion like concat('%', #{performance_describtion}, '%')-->
+            <!--</if>-->
+            <!--<if test="start_date !=null">-->
+                <!--and start_date=#{start_date}-->
+            <!--</if>-->
+            <!--<if test="end_date !=null">-->
+                <!--and end_date=#{end_date}-->
+            <!--</if>-->
+            <!--<if test="program_name !=null">-->
+                <!--and program_name=#{program_name}-->
+            <!--</if>-->
+            <!--<if test="program_describtion !=null">-->
+                <!--and program_describtion like concat('%', #{program_describtion}, '%')-->
+            <!--</if>-->
+            <!--<if test="startdate !=null">-->
+                <!--and startdate=#{startdate}-->
+            <!--</if>-->
+            <!--<if test="enddate !=null">-->
+                <!--and enddate=#{enddate}-->
+            <!--</if>-->
+            <!--<if test="award_name !=null">-->
+                <!--and award_name like concat('%', #{award_name}, '%')-->
+            <!--</if>-->
+        <!--</where>-->
+        <!--GROUP BY r.resume_id-->
+    <!--</select>-->
+</mapper>

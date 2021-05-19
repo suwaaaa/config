@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="userName" autocomplete="off" class="layui-input" id="userName">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">手机号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="userPhone" autocomplete="off" class="layui-input" id="userPhone">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">真实姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="userRealName" autocomplete="off" class="layui-input" id="userRealName">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button class="layui-btn" data-type="reload" id="search_btn">搜索</button>
+                            <!--<button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>-->
+                        </div>
+                    </div>
+
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="reflsh"> 刷新数据 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">注销</a>
+        </script>
+
+    </div>
+</div>
+<script src="../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        table.render({
+            elem: '#currentTableId',
+            id: 'currentTableId',
+            url: '/admin/getUserList',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [
+                [ //表头
+                    {field: 'LAY_TABLE_INDEX', title: '序号', sort: true,width:100,align:"center"}
+                    ,{field: 'userId', title: '用户ID',sort: true, width:100,align:"center"}
+                    ,{field: 'userName', title: '用户名',edit: 'text',width:200,align:"center"}
+                    ,{field: 'userRealName', title: '真实姓名', sort: true,edit: 'text',width:150,align:"center"}
+                    ,{field: 'userPhone', title: '手机号',edit: 'text',width:150,align:"center"}
+                    ,{field: 'userEmail', title: '邮箱',edit: 'text',width:200,align:"center"}
+                    ,{field: 'active',width:80,align:"center",title: '状态',templet: function (item) {
+                            if (item.active == false) {
+                                return "已注销";
+                            } else if (item.active == true) {
+                                return "可用";
+                            }
+                        }
+                    }
+                    ,{field: 'userSex', align:"center",width:60,title: '性别'}
+                    ,{field: 'userCreatime', align:"center",title: '创建时间', edit: 'text', sort: true,templet : "<div>{{layui.util.toDateString(d.userCreatime, 'yyyy年MM月dd日 HH:mm:ss')}}</div>"}
+                    ,{ fixed:"right",title:'操作', toolbar: '#currentTableBar'}
+                ]
+            ],
+            parseData: function(res){ //res 即为原始返回的数据
+                console.log(res);
+                return {
+                    "code":0, //解析接口状态
+                    "msg":"", //解析提示文本
+                    "count": 1, //解析数据长度
+                    "data": res//解析数据列表
+                };
+            },
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+
+        //搜索
+        $("#search_btn").on("click",function(){
+            table.reload("currentTableId",{
+                where: {
+                    userName: $("#userName").val(),
+                    userPhone:$("#userPhone").val(),
+                    userRealName:$("#userRealName").val()
+                }
+            });
+        });
+
+
+        //监听单元格编辑
+        table.on('edit(currentTableFilter)', function(obj){
+            var value = obj.value //得到修改后的值
+                ,data = obj.data //得到所在行所有键值
+                ,field = obj.field; //得到字段
+
+            //调用修改接口
+            $.ajax({
+                type: "POST",
+                url: "/admin/updateUser",
+                dataType: "json",
+                contentType:'application/json;charset=UTF-8',
+                data: JSON.stringify(data),
+                success: function (data) {
+                    if (data>0) {
+                        alert("修改成功");
+                    } else {
+                        alert("修改失败");
+                    }
+                }
+            });
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加用户',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '../page/table/add.html',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }else if (obj.event === 'reflsh') {  // 监听删除操作
+                table.reload("currentTableId",{
+                    where: {
+                        userName: $("#userName").val(),
+                        userPhone:$("#userPhone").val(),
+                        userRealName:$("#userRealName").val()
+                    }
+                })
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                var index = layer.open({
+                    title: '编辑用户',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '/admin/table/edit.html/'+data.userId,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('是否注销该用户?', function (index) {
+                    //调用修改接口
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/deleteUser/"+data.userId,
+                        success: function (data) {
+                            if (data>0) {
+                                layer.msg("注销成功")
+                            }
+                        }
+                    });
+                    layer.close(index);
+                    table.reload("currentTableId",{
+                        where: {
+                            userName: $("#userName").val(),
+                            userPhone:$("#userPhone").val(),
+                            userRealName:$("#userRealName").val()
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>
