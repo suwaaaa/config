@@ -2,6 +2,7 @@ package com.portal.controller;
 
 import com.portal.pojo.User;
 import com.portal.service.UserService;
+import com.portal.utils.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +17,16 @@ public class UserController {
     private UserService userservice;
 
     @RequestMapping(value = "/user/adduser", method = RequestMethod.POST)
-    public boolean addUser(@RequestBody User user) {
-        return userservice.addUser(user);
+    public Object addUser(@RequestBody User user) {
+        Boolean i = userservice.addUser(user);
+        if (i == true){
+            return JsonData.buildSuccess();
+        }
+        else return JsonData.buildError("AddUser Error");
     }
 
     @RequestMapping(value = "/user/queryuser/{user_id}", method = RequestMethod.GET)
-    public User queryUser(@PathVariable("user_id") Long id) {
+    public Object queryUser(@PathVariable("user_id") Long id) {
         return userservice.queryUser(id);
     }
 
@@ -31,29 +36,40 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/addUserSelective", method = RequestMethod.POST)
-    public Boolean addUserSelective(@RequestBody User user) {
-        return userservice.addUserSelective(user);
+    public Object addUserSelective(@RequestBody User user) {
+
+        return JsonData.buildSuccess(userservice.addUserSelective(user));
     }
 
     @RequestMapping(value = "/user/deleteUser/{user_id}", method = RequestMethod.DELETE)
-    public Boolean deleteUser(@PathVariable("user_id") Long id) {
-        return userservice.deleteUser(id);
+    public Object deleteUser(@PathVariable("user_id") Long id) {
+        Boolean i = userservice.deleteUser(id);
+        if (i != false){
+            return JsonData.buildSuccess();
+        }
+        else return JsonData.buildError("deleteUser error");
     }
 
     @RequestMapping(value = "/user/updateUserSelective", method = RequestMethod.POST)
-    public Boolean updateUserSelective(@RequestBody User user) {
-
-
-        return userservice.updateUserSelective(user);
+    public Object updateUserSelective(@RequestBody User user) {
+        Boolean i = userservice.updateUserSelective(user);
+        if (i != false){
+            return JsonData.buildSuccess();
+        }
+        else return JsonData.buildError("updateUserSelective error");
     }
 
     @RequestMapping(value = "/user/updateUserAll", method = RequestMethod.PUT)
-    public Boolean updateUserAll(@RequestBody User user) {
-        return userservice.updateUserAll(user);
+    public Object updateUserAll(@RequestBody User user) {
+        Boolean i = userservice.updateUserAll(user);
+        if (i != false){
+            return  JsonData.buildSuccess("updateUserAll successful");
+        }
+        else return JsonData.buildError("updateUserSelective error");
     }
 
     @RequestMapping(value = "/user/queryUserNumAll", method = RequestMethod.GET)
-    public Integer queryUserNumAll() {
+    public Object queryUserNumAll() {
         return userservice.queryUserNumAll();
     }
 

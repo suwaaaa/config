@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.portal.pojo.Resumeposition;
 import com.portal.service.ResumepositionService;
+import com.portal.utils.JsonData;
 import com.portal.utils.RedisUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,42 +193,66 @@ public class ResumepositionController {
 
 
     @RequestMapping(value = "/resume/addPositionAll",method = RequestMethod.PUT)
-    public Boolean addPositionAll(Resumeposition resumeposition){
-        return resumepositionService.addPositionAll(resumeposition);
+    public Object addPositionAll(Resumeposition resumeposition){
+        Boolean i = resumepositionService.addPositionAll(resumeposition);
+        if (i ==true ){
+        return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("addPositionAll fail");
     }
 
 
 
     @RequestMapping(value = "/resume/addPositionSelective",method = RequestMethod.POST)
-    public Boolean addPositionSelective(Resumeposition resumeposition){
-        return resumepositionService.addPositionSelective(resumeposition);
+    public Object addPositionSelective(Resumeposition resumeposition){
+        Boolean i = resumepositionService.addPositionSelective(resumeposition);
+        if (i ==true ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("addPositionSelective fail");
     }
 
 
 
     @RequestMapping(value = "/resume/updatePositionAllById/{position_id]",method = RequestMethod.PUT)
-    public Boolean updatePositionAllById(Integer position_id){
-        return resumepositionService.updatePositionAllById(position_id);
+    public Object updatePositionAllById(Integer position_id){
+        Boolean i = resumepositionService.updatePositionAllById(position_id);
+        if (i ==true ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("updatePositionAllById fail");
     }
 
 
     @RequestMapping(value = "/resume/updatePositionSelective",method = RequestMethod.POST)
-    public Boolean updatePositionSelective(Resumeposition resumeposition){
-        return resumepositionService.updatePositionSelective(resumeposition);
+    public Object updatePositionSelective(Resumeposition resumeposition){
+        Boolean i = resumepositionService.updatePositionSelective(resumeposition);
+        if (i ==true ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("updatePositionSelective fail");
     }
 
 
 
     @RequestMapping(value = "/resume/deletePosition/{position_id}",method = RequestMethod.DELETE)
-    public Boolean deletePosition(Integer position_id){
-        return resumepositionService.deletePosition(position_id);
+    public Object deletePosition(Integer position_id){
+        Boolean i = resumepositionService.deletePosition(position_id);
+        if (i ==true ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("deletePosition fail");
     }
 
 
 
     @RequestMapping(value = "/resume/deleteByIdList",method = RequestMethod.DELETE)
-    public Boolean deleteByIdList(List<Resumeposition> resumepositionlist){
-        return resumepositionService.deleteByIdList(resumepositionlist);
+    public Object deleteByIdList(List<Resumeposition> resumepositionlist){
+        Boolean i = resumepositionService.deleteByIdList(resumepositionlist);
+        if (i ==true ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("deleteByIdList fail");
     }
 
 

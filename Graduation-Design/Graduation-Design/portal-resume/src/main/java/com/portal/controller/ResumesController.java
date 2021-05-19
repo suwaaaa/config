@@ -2,6 +2,7 @@ package com.portal.controller;
 
 import com.portal.pojo.*;
 import com.portal.service.ResumesService;
+import com.portal.utils.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -124,28 +125,48 @@ public class ResumesController {
 
 
     @RequestMapping(value = "/resumes/addResumesSkills",method = RequestMethod.PUT)
-    public Integer addResumesSkills(@RequestBody Skill skill) {
-        return resumesService.addResumesSkills(skill);
+    public Object addResumesSkills(@RequestBody Skill skill) {
+        Integer i = resumesService.addResumesSkills(skill);
+        if (i == 1 ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("addResumesSkills fail");
     }
 
     @RequestMapping(value = "/resumes/addResumesPerformance",method = RequestMethod.PUT)
-    public Integer addResumesPerformance(@RequestBody Performance performance) {
-        return resumesService.addResumesPerformance(performance);
+    public Object addResumesPerformance(@RequestBody Performance performance) {
+        Integer i = resumesService.addResumesPerformance(performance);
+        if (i == 1 ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("addResumesPerformance fail");
     }
 
     @RequestMapping(value = "/resumes/addResumesExperience",method = RequestMethod.PUT)
-    public Integer addResumesExperience(@RequestBody Experience experience) {
-        return resumesService.addResumesExperience(experience);
+    public Object addResumesExperience(@RequestBody Experience experience) {
+        Integer i = resumesService.addResumesExperience(experience);
+        if (i == 1 ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("addResumesExperience fail");
     }
 
     @RequestMapping(value = "/resumes/addResumesAward",method = RequestMethod.PUT)
-    public Integer addResumesAward(@RequestBody Award award) {
-        return resumesService.addResumesAward(award);
+    public Object addResumesAward(@RequestBody Award award) {
+        Integer i = resumesService.addResumesAward(award);
+        if (i == 1 ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("addResumesAward fail");
     }
 
     @RequestMapping(value = "/resumes/getResumesIdByUserId",method = RequestMethod.GET)
-    public Integer getResumesIdByUserId(@RequestParam("user_id") Integer user_id) {
-        return resumesService.getResumesIdByUserId(user_id);
+    public Object getResumesIdByUserId(@RequestParam("user_id") Integer user_id) {
+        Integer i = resumesService.getResumesIdByUserId(user_id);
+        if (i == 1 ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("getResumesIdByUserId fail");
     }
 
     @RequestMapping(value = "/resumes/updateResumesBasis",method = RequestMethod.PUT)
@@ -157,24 +178,36 @@ public class ResumesController {
     @RequestMapping(value = "/resumes/updateResumesBasisSelective",method = RequestMethod.POST)
     public Integer updateResumesBasisSelective(@RequestBody Resumes resumes) {
         resumes.setResume_creatime(new Date());
-        System.out.println("Resume_id------"+resumes.getResume_id()+"-----"+resumes.getResumepho_url());
+//        System.out.println("Resume_id------"+resumes.getResume_id()+"-----"+resumes.getResumepho_url());
         return resumesService.updateResumesBasisSelective(resumes);
     }
 
 
     @RequestMapping(value = "/resumes/updateResumesSkills",method = RequestMethod.POST)
-    public Integer updateResumesSkills(@RequestBody List<Skill> skills) {
-        return resumesService.updateResumesSkills(skills);
+    public Object updateResumesSkills(@RequestBody List<Skill> skills) {
+        Integer i = resumesService.updateResumesSkills(skills);
+        if (i == 1 ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("updateResumesSkills fail");
     }
 
     @RequestMapping(value = "/resumes/updateResumesAwards",method = RequestMethod.POST)
-    public Integer updateResumesAwards(@RequestBody List<Award> awards) {
-        return resumesService.updateResumesAwards(awards);
+    public Object updateResumesAwards(@RequestBody List<Award> awards) {
+        Integer i = resumesService.updateResumesAwards(awards);
+        if (i == 1 ){
+            return JsonData.buildSuccess(resumesService.updateResumesAwards(awards));
+        }
+        return JsonData.buildError("updateResumesAwards fail");
     }
 
     @RequestMapping(value = "/resumes/updateResumesExperiences",method = RequestMethod.POST)
-    public Integer updateResumesExperiences(@RequestBody List<Experience> experiences) {
-        return resumesService.updateResumesExperiences(experiences);
+    public Object updateResumesExperiences(@RequestBody List<Experience> experiences) {
+        Integer i = resumesService.updateResumesExperiences(experiences);
+        if (i == 1 ){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("updateResumesExperiences fail");
     }
 
     @RequestMapping(value = "/resumes/updateResumesPerformances",method = RequestMethod.POST)
