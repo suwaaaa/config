@@ -31,7 +31,7 @@ mybatis:
 #  config-location: classpath:mybatis/mybatis_config.xml
 
 file:
-  path: E:/File-all/test/
+  path: E:\File-all\test\
 
 redis:
   database: 0

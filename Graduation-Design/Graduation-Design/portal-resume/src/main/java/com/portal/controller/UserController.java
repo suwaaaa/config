@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/queryuser/{user_id}", method = RequestMethod.GET)
-    public Object queryUser(@PathVariable("user_id") Long id) {
+    public User queryUser(@PathVariable("user_id") Long id) {
         return userservice.queryUser(id);
     }
 
@@ -69,7 +69,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/queryUserNumAll", method = RequestMethod.GET)
-    public Object queryUserNumAll() {
+    public Integer queryUserNumAll() {
         return userservice.queryUserNumAll();
     }
 

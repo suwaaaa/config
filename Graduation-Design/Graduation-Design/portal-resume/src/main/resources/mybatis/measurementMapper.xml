@@ -34,5 +34,9 @@
         select * from measurement where measurement_id = #{measurement_id};
     </select>
 
+    <select id="queryOutsideUrlAll" resultMap="BaseResultMap">
+        select * from measurement;
+    </select>
+
 
 </mapper>
